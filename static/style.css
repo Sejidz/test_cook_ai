@@ -1,0 +1,146 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+h1, h2 {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+textarea {
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+.results-container {
+    margin-top: 30px;
+}
+
+.response-box, .log-box {
+    background-color: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    min-height: 100px;
+    white-space: pre-wrap; /* Preserves line breaks from AI */
+    font-family: monospace;
+}
+
+/* Find this existing rule */
+.log-box {
+    background-color: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    min-height: 100px;
+    white-space: pre-wrap; /* This can be removed */
+    font-family: monospace;
+    color: #333; /* Use a neutral default color */
+    
+    /* ADD THESE LINES */
+    max-height: 200px; /* Set a max height */
+    overflow-y: auto;  /* Add a scrollbar when needed */
+    white-space: normal; /* Change from pre-wrap */
+}
+
+/* ADD THIS NEW RULE at the end of the file */
+.log-entry {
+    border-bottom: 1px solid #eee;
+    padding: 4px 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+.log-entry:first-child {
+    padding-top: 0;
+}
+
+/* ADD THESE NEW RULES to the end of style.css */
+
+/* Button container */
+#meal-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Find this existing rule */
+.meal-btn {
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #333; /* <-- ADD THIS LINE to make text visible */
+}
+
+.meal-btn:hover {
+    background-color: #e9e9e9;
+    border-color: #aaa;
+}
+
+/* Style for the *selected* button */
+.meal-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* ADD THIS NEW RULE at the end of the file */
+/* This hides the user-input and its label by default */
+#user-input-label,
+#user-input {
+    display: none;
+}

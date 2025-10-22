@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main>
+        <h1>My AI Project</h1>
+        
+<form id="prompt-form">
+    
+    <label>Select a Meal Type:</label>
+    <div id="meal-buttons">
+        <button type="button" class="meal-btn" id="btn-breakfast">Breakfast</button>
+        <button type="button" class="meal-btn" id="btn-lunch">Lunch</button>
+        <button type="button" class="meal-btn" id="btn-dinner">Dinner</button>
+        <button type="button" class="meal-btn" id="btn-custom">Custom</button>
+    </div>
+
+    <label for="user-input" id="user-input-label">Enter your ingredients or request:</label>
+    <textarea id="user-input" rows="4" placeholder="e.g., 'eggs, cheese, and spinach'"></textarea>
+    
+    <button type="submit" id="submit-button">Send to AI</button>
+</form>
+        <div class="results-container">
+            <h2>AI Response:</h2>
+            <div id="ai-response" class="response-box">
+                </div>
+            
+            <h2>System Log:</h2>
+            <div id="error-log" class="log-box">
+                </div>
+        </div>
+    </main>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
