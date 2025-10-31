@@ -1,0 +1,14 @@
+| ingredient_id | ingredient_name | preference_score | bias_adjusted_score | availability | availability_score | last_updated |
+|----------------|-----------------|------------------|---------------------|---------------|--------------------|---------------|
+| 001 | chicken_breast | 0.92 | 0.83 | in_pantry | 1.00 | 2025-10-06 |
+| 002 | broccoli | 0.88 | 0.80 | in_pantry | 1.00 | 2025-10-06 |
+| 003 | garlic | 0.77 | 0.74 | available_nearby | 0.85 | 2025-10-06 |
+| 004 | brown_rice | 0.70 | 0.69 | in_pantry | 1.00 | 2025-10-06 |
+| 005 | honey | 0.65 | 0.67 | in_pantry | 1.00 | 2025-10-06 |
+| 006 | soy_sauce | 0.63 | 0.65 | available_nearby | 0.85 | 2025-10-06 |
+| 007 | lemon | 0.58 | 0.63 | discounted_nearby | 0.90 | 2025-10-06 |
+| 008 | olive_oil | 0.55 | 0.61 | in_pantry | 1.00 | 2025-10-06 |
+| 009 | zucchini | 0.30 | 0.47 | available_nearby | 0.85 | 2025-10-06 |
+| 010 | salmon | 0.20 | 0.45 | supermarket_stocked | 0.80 | 2025-10-06 |
+| 011 | tofu | 0.10 | 0.43 | discounted_nearby | 0.90 | 2025-10-06 |
+| 012 | quinoa | 0.08 | 0.42 | available_nearby | 0.85 | 2025-10-06 |

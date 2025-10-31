@@ -1,0 +1,7 @@
+| date | day | time_available_min | meal_windows | activity_level | goal_type | goal_value | goal_timeframe_days | goal_progress | calorie_target_day | cook_time_pref | special_events | last_updated |
+|-------|-----|--------------------|---------------|----------------|------------|-------------|----------------------|----------------|--------------------|----------------|----------------|---------------|
+| 2025-10-06 | Mon | 45 | {breakfast: "08:00–09:00", lunch: "12:00–13:00", dinner: "19:00–20:00"} | high | weight_loss | -2kg | 14 | 0.4 | 1800 | 25 | gym_6pm | 2025-10-06 |
+| 2025-10-07 | Tue | 30 | {breakfast: "08:30–09:00", lunch: "12:30–13:00", dinner: "20:00–20:30"} | medium | weight_loss | -2kg | 14 | 0.45 | 1800 | 20 | meeting_7pm | 2025-10-06 |
+| 2025-10-08 | Wed | 70 | {breakfast: "07:30–08:00", lunch: "12:00–13:00", dinner: "18:30–19:30"} | low | weight_loss | -2kg | 14 | 0.50 | 1750 | 40 | rest_day | 2025-10-06 |
+| 2025-10-09 | Thu | 20 | {breakfast: "08:00–08:30", lunch: "12:00–12:30", dinner: "19:30–20:00"} | high | weight_loss | -2kg | 14 | 0.55 | 1800 | 15 | gym_6pm | 2025-10-06 |
+| 2025-10-10 | Fri | 50 | {breakfast: "08:30–09:00", lunch: "12:30–13:30", dinner: "20:00–21:00"} | medium | weight_loss | -2kg | 14 | 0.60 | 1850 | 30 | movie_night | 2025-10-06 |

@@ -28,19 +28,20 @@ form {
 label {
     font-weight: bold;
     margin-bottom: 8px;
+    margin-top: 10px;
 }
 
 textarea {
     width: 100%;
-    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    box-sizing: border-box; 
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 1rem;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-button {
+button[type="submit"], #cook-button {
     background-color: #007bff;
     color: white;
     border: none;
@@ -52,11 +53,11 @@ button {
     transition: background-color 0.2s;
 }
 
-button:hover {
+button[type="submit"]:hover, #cook-button:hover {
     background-color: #0056b3;
 }
 
-button:disabled {
+button[type="submit"]:disabled {
     background-color: #aaa;
     cursor: not-allowed;
 }
@@ -71,49 +72,29 @@ button:disabled {
     border-radius: 5px;
     padding: 15px;
     min-height: 100px;
-    white-space: pre-wrap; /* Preserves line breaks from AI */
     font-family: monospace;
 }
 
-/* Find this existing rule */
-.log-box {
-    background-color: #fdfdfd;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
-    min-height: 100px;
-    white-space: pre-wrap; /* This can be removed */
-    font-family: monospace;
-    color: #333; /* Use a neutral default color */
-    
-    /* ADD THESE LINES */
-    max-height: 200px; /* Set a max height */
-    overflow-y: auto;  /* Add a scrollbar when needed */
-    white-space: normal; /* Change from pre-wrap */
+.response-box {
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* ADD THIS NEW RULE at the end of the file */
-.log-entry {
-    border-bottom: 1px solid #eee;
-    padding: 4px 0;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-.log-entry:first-child {
-    padding-top: 0;
+#user-input-label,
+#user-input {
+    display: none;
 }
 
-/* ADD THESE NEW RULES to the end of style.css */
-
-/* Button container */
+/* --- Meal Button Styles --- */
 #meal-buttons {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
-/* Find this existing rule */
 .meal-btn {
     padding: 10px 15px;
     font-size: 0.95rem;
@@ -123,7 +104,7 @@ button:disabled {
     background-color: #f8f8f8;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: #333; /* <-- ADD THIS LINE to make text visible */
+    color: #333;
 }
 
 .meal-btn:hover {
@@ -131,16 +112,107 @@ button:disabled {
     border-color: #aaa;
 }
 
-/* Style for the *selected* button */
 .meal-btn.active {
     background-color: #007bff;
     color: white;
     border-color: #007bff;
 }
 
-/* ADD THIS NEW RULE at the end of the file */
-/* This hides the user-input and its label by default */
-#user-input-label,
-#user-input {
-    display: none;
+/* --- Log Styles --- */
+.log-box {
+    max-height: 200px; 
+    overflow-y: auto;  
+    white-space: normal;
+    color: #333;
+}
+
+.log-entry {
+    border-bottom: 1px solid #eee;
+    padding: 4px 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* --- Recipe Card Styles --- */
+.recipe-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.recipe-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: #007bff;
+}
+
+.recipe-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #0056b3;
+}
+
+.recipe-card p {
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.recipe-card p strong {
+    color: #333;
+}
+
+.recipe-card ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+/* --- Recipe View Styles --- */
+#back-button {
+    background-color: #6c757d;
+    margin-bottom: 20px;
+}
+#back-button:hover {
+    background-color: #5a6268;
+}
+
+#hero-image {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #eee;
+    margin-bottom: 20px;
+}
+
+#recipe-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    white-space: normal; /* Allow text to wrap */
+}
+
+/* Styles for Agent 3's HTML table */
+#recipe-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+#recipe-content th,
+#recipe-content td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+#recipe-content th {
+    background-color: #f4f7f6;
+    font-weight: bold;
 }

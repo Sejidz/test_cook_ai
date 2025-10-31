@@ -1,0 +1,10 @@
+| rule_id | rule_type | category | description | enforcement | priority_weight | active | last_updated |
+|----------|------------|-----------|--------------|--------------|------------------|--------------|
+| R001 | dietary | diet_type | high_protein diet (≥ 30% of daily calories from protein) | soft | 0.7 | true | 2025-10-06 |
+| R002 | health | allergy | allergic to peanuts and dairy products | hard | 1.0 | true | 2025-10-06 |
+| R003 | ethical | religious | avoid pork and alcohol | hard | 1.0 | true | 2025-10-06 |
+| R004 | nutritional | sugar_limit | max 25g added sugar per day | soft | 0.6 | true | 2025-10-06 |
+| R005 | time | cooking_time_limit | prefer recipes under 25 minutes | soft | 0.5 | true | 2025-10-06 |
+| R006 | preference | cuisine_preference | favor Asian fusion or Mediterranean styles | soft | 0.4 | true | 2025-10-06 |
+| R007 | environmental | sustainability | prioritize locally sourced ingredients | soft | 0.3 | true | 2025-10-06 |
+| R008 | health | salt_sensitivity | moderate sodium intake (< 2g sodium per day) | soft | 0.6 | true | 2025-10-06 |
