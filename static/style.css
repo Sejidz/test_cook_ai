@@ -156,7 +156,6 @@ main {
     transition: all 0.3s ease-in-out; /* Smooth transition as it grows */
 }
 
-/* ... (rest of style.css is unchanged) ... */
 h1, h2 {
     border-bottom: 2px solid #eee;
     padding-bottom: 10px;
@@ -204,8 +203,108 @@ button[type="submit"]:disabled {
     cursor: not-allowed;
 }
 
+/* --- ================================== --- */
+/* --- NEW: PROFILE DATA SECTION STYLES --- */
+/* --- ================================== --- */
+
+#profile-data-section {
+    background-color: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0 20px 20px 20px;
+    margin-bottom: 30px;
+}
+
+#profile-data-section h2 {
+    border: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.profile-tabs {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.profile-tab-btn {
+    padding: 10px 15px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+}
+.profile-tab-btn:hover {
+    background-color: #f8f8f8;
+}
+.profile-tab-btn.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+}
+
+.profile-tab-panel {
+    display: none;
+}
+.profile-tab-panel.active {
+    display: block;
+}
+
+/* Style for the tables we're about to add */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.data-table th,
+.data-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+.data-table th {
+    background-color: #f4f7f6;
+    font-weight: bold;
+}
+/* For the preference buttons */
+.preference-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.preference-controls button {
+    font-weight: bold;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 25px;
+    height: 25px;
+}
+.preference-controls button:hover {
+    background: #eee;
+}
+.preference-controls span {
+    font-weight: bold;
+    width: 30px;
+    text-align: center;
+}
+
 .results-container {
     margin-top: 30px;
+}
+
+/* --- UPDATED: ai-response container --- */
+/* This is now a grid for our new cards */
+#ai-response {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 0;
+    border: none;
 }
 
 .response-box, .log-box {
@@ -275,16 +374,19 @@ button[type="submit"]:disabled {
     line-height: 1.4;
 }
 
-/* --- Recipe Card Styles --- */
+/* --- ================================== --- */
+/* --- NEW: Recipe Card Styles          --- */
+/* --- ================================== --- */
 .recipe-card {
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 20px;
-    margin: 10px;
     background-color: #fdfdfd;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     cursor: pointer;
     transition: all 0.2s ease;
+    overflow: hidden; /* To contain the image */
+    display: flex;
+    flex-direction: column;
 }
 
 .recipe-card:hover {
@@ -292,25 +394,57 @@ button[type="submit"]:disabled {
     border-color: #007bff;
 }
 
-.recipe-card h3 {
+.recipe-card-image {
+    width: 100%;
+    height: 150px;
+    background-color: #eee;
+    background-size: cover;
+    background-position: center;
+}
+
+.recipe-card-content {
+    padding: 15px;
+    flex-grow: 1; /* Makes card content fill space */
+    display: flex;
+    flex-direction: column;
+}
+
+.recipe-card-content h3 {
     margin-top: 0;
     margin-bottom: 10px;
     color: #0056b3;
+    font-size: 1.2rem;
 }
 
-.recipe-card p {
+.recipe-card-content p {
     margin-bottom: 15px;
     font-size: 0.95rem;
     color: #555;
+    flex-grow: 1; /* Pushes tags to the bottom */
 }
 
-.recipe-card p strong {
+.recipe-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px; /* Space before cook time */
+}
+
+.recipe-card-tag {
+    background-color: #e9ecef;
+    color: #495057;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.recipe-card-footer {
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
     color: #333;
-}
-
-.recipe-card ul {
-    margin: 0;
-    padding-left: 20px;
 }
 
 /* --- Recipe View Styles --- */
@@ -332,29 +466,286 @@ button[type="submit"]:disabled {
     margin-bottom: 20px;
 }
 
-#recipe-content {
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    white-space: normal; /* Allow text to wrap */
-}
-
-/* Styles for Agent 3's HTML table */
-#recipe-content table {
+/* --- Tables (now in tabs) --- */
+.tab-panel table { 
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
 }
 
-#recipe-content th,
-#recipe-content td {
+.tab-panel th,
+.tab-panel td {
     border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
     vertical-align: top;
 }
 
-#recipe-content th {
+.tab-panel th {
     background-color: #f4f7f6;
     font-weight: bold;
+}
+
+
+/* --- ================================== --- */
+/* --- NEW: Recipe Tab Styles           --- */
+/* --- ================================== --- */
+.recipe-tabs {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #6c757d;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px; /* Pulls button border down to cover main border */
+}
+
+.tab-btn:hover {
+    background-color: #f8f8f8;
+}
+
+.tab-btn.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+}
+
+.tab-panel {
+    display: none; /* Hide all panels by default */
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.tab-panel.active {
+    display: block; /* Show only the active one */
+}
+
+
+/* --- ================================== --- */
+/* --- UPDATED: COOKING MODE STYLES     --- */
+/* --- ================================== --- */
+
+#exit-cook-mode-btn {
+    background-color: #6c757d;
+    margin-bottom: 20px;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+}
+#exit-cook-mode-btn:hover {
+    background-color: #5a6268;
+}
+
+/* This is the new main panel for the step */
+#step-display-area {
+    background-color: #fdfdfd;
+    border: 2px solid #007bff; /* Highlight the main step */
+    border-radius: 8px;
+    padding: 30px;
+    margin-top: 20px;
+    min-height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#step-display-number {
+    font-size: 1.8rem;
+    color: #0056b3;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+#step-display-instruction {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* New container for tool buttons */
+.cook-mode-tools {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.cook-mode-tools button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    color: #333;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.cook-mode-tools button:hover {
+    background-color: #e0e0e0;
+    border-color: #aaa;
+}
+
+
+/* New container for nav buttons */
+.cook-mode-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.cook-mode-nav button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.cook-mode-nav button:hover {
+    background-color: #0056b3;
+}
+.cook-mode-nav button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+
+/* --- ================================== --- */
+/* --- MODAL & CHATBOT STYLES         --- */
+/* --- ================================== --- */
+
+/* --- Step Explanation Modal (Unchanged) --- */
+#modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+#modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 80%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+#modal-close-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+    margin-top: 20px;
+}
+
+/* --- NEW: Chatbot Modal Styles --- */
+#chatbot-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1010; /* Higher than the other modal */
+}
+
+#chatbot-modal-content {
+    background: white;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    height: 70vh;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+#chatbot-modal-content h3 {
+    padding: 15px 20px;
+    margin: 0;
+    border-bottom: 1px solid #eee;
+}
+
+#chat-history {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #fdfdfd;
+}
+
+.chat-message {
+    padding: 8px 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    line-height: 1.4;
+}
+.chat-message.bot {
+    background-color: #e9ecef;
+    color: #333;
+    float: left;
+    clear: both;
+}
+.chat-message.user {
+    background-color: #007bff;
+    color: white;
+    float: right;
+    clear: both;
+}
+
+#chat-form {
+    display: flex;
+    border-top: 1px solid #ddd;
+}
+#chat-input {
+    flex-grow: 1;
+    border: none;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 0 0 0 8px;
+}
+#chat-form button {
+    border: none;
+    background-color: #007bff;
+    color: white;
+    padding: 0 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 0 0 8px 0;
+}
+
+#chatbot-modal-close-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 15px;
 }

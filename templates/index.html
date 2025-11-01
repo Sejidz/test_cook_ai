@@ -10,7 +10,6 @@
 
     <aside id="debug-sidebar">
         <button id="toggle-sidebar-btn" title="Toggle Panel">&larr;</button>
-        
         <div class="sidebar-content-wrapper">
             <h2>Agent Debug Panel</h2>
             <div id="debug-panel-body">
@@ -21,6 +20,27 @@
 
     <main>
         <h1>AI Recipe Assistant</h1>
+
+        <div id="profile-data-section">
+            <h2>My Profile</h2>
+            <div class="profile-tabs">
+                <button class="profile-tab-btn active" data-tab="profile-ingredients">Ingredients</button>
+                <button class="profile-tab-btn" data-tab="profile-calendar">Calendar</button>
+                <button class="profile-tab-btn" data-tab="profile-rules">Ruleset</button>
+            </div>
+
+            <div class="profile-tab-content">
+                <div id="profile-ingredients-panel" class="profile-tab-panel active">
+                    <p>Loading ingredient data...</p>
+                </div>
+                <div id="profile-calendar-panel" class="profile-tab-panel">
+                    <p>Loading calendar data...</p>
+                </div>
+                <div id="profile-rules-panel" class="profile-tab-panel">
+                    <p>Loading ruleset data...</p>
+                </div>
+            </div>
+        </div>
         
         <div id="request-view">
             <form id="prompt-form">
@@ -57,11 +77,32 @@
             
             <h2 id="recipe-title">Recipe Title Goes Here</h2>
             
-            <div id="recipe-content" class="response-box">
-                </div>
+            <div class="recipe-tabs">
+                <button class="tab-btn active" data-tab="ingredients">Ingredients</button>
+                <button class="tab-btn" data-tab="instructions">Instructions</button>
+                <button class="tab-btn" data-tab="nutrition">Nutrition</button>
+            </div>
+
+            <div class="recipe-tab-content">
+                <div id="ingredients-panel" class="tab-panel active">
+                    </div>
+                <div id="instructions-panel" class="tab-panel">
+                    </div>
+                <div id="nutrition-panel" class="tab-panel">
+                    </div>
+            </div>
             
             <button id="cook-button" style="display: none;">Let's Cook!</button>
         </div>
+
+        <div id="cooking-mode-view" style="display: none;">
+            </div>
+
+        <div id="modal-backdrop" style="display: none;">
+            </div>
+        
+        <div id="chatbot-modal-backdrop" style="display: none;">
+            </div>
 
     </main>
 
