@@ -3,55 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chef Project</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>AI Recipe Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+
+    <aside id="debug-sidebar">
+        <button id="toggle-sidebar-btn" title="Toggle Panel">&larr;</button>
+        
+        <div class="sidebar-content-wrapper">
+            <h2>Agent Debug Panel</h2>
+            <div id="debug-panel-body">
+                <p>Logs will appear here as agents run...</p>
+            </div>
+        </div>
+    </aside>
+
     <main>
+        <h1>AI Recipe Assistant</h1>
+        
         <div id="request-view">
-            <h1>AI Chef</h1>
-            
             <form id="prompt-form">
-                <label>Select a Meal Type:</label>
+                <label for="mealType">What meal are you planning?</label>
                 <div id="meal-buttons">
                     <button type="button" class="meal-btn" id="btn-breakfast">Breakfast</button>
                     <button type="button" class="meal-btn" id="btn-lunch">Lunch</button>
                     <button type="button" class="meal-btn" id="btn-dinner">Dinner</button>
-                    <button type="button" class="meal-btn" id="btn-custom">Custom</button>
+                    <button type="button" class="meal-btn" id="btn-snack">Snack</button>
+                    <button type="button" class="meal-btn" id="btn-custom">Custom...</button>
                 </div>
 
-                <label for="user-input" id="user-input-label">Describe your custom situation:</label>
-                <textarea id="user-input" rows="4" placeholder="e.g., 'I have leftover chicken and rice...'"></textarea>
-                
+                <label for="user-input" id="user-input-label">Custom Details:</label>
+                <textarea id="user-input" rows="3" placeholder="e.g., 'I have leftover chicken...'"></textarea>
+
                 <button type="submit" id="submit-button">Get Recipes</button>
             </form>
-            
+
             <div class="results-container">
-                <h2>AI Response:</h2>
+                <h2>Recipe Options</h2>
                 <div id="ai-response" class="response-box">
                     </div>
-                
-                <h2>System Log:</h2>
+
+                <h2>System Log</h2>
                 <div id="error-log" class="log-box">
                     </div>
             </div>
         </div>
-        
+
         <div id="recipe-view" style="display: none;">
             <button id="back-button">&larr; Back to Options</button>
             
-            <h1 id="recipe-title"></h1>
+            <img id="hero-image" src="" alt="Hero image of the dish">
             
-            <img id="hero-image" src="" alt="Hero image of the dish" />
-
-            <div id="recipe-content">
+            <h2 id="recipe-title">Recipe Title Goes Here</h2>
+            
+            <div id="recipe-content" class="response-box">
                 </div>
             
             <button id="cook-button" style="display: none;">Let's Cook!</button>
         </div>
 
     </main>
-    
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <script src="/static/script.js"></script>
 </body>
 </html>

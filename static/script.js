@@ -18,10 +18,85 @@ document.addEventListener("DOMContentLoaded", () => {
     const heroImage = document.getElementById("hero-image");
     const cookButton = document.getElementById("cook-button");
 
+    // --- Get Debug Panel Element & Toggle Button ---
+    const debugPanelBody = document.getElementById("debug-panel-body");
+    const debugSidebar = document.getElementById("debug-sidebar");
+    const toggleSidebarBtn = document.getElementById("toggle-sidebar-btn");
+
+    // --- Event Listener for Toggle Button ---
+    toggleSidebarBtn.addEventListener("click", () => {
+        debugSidebar.classList.toggle("sidebar-collapsed");
+        // Change button text
+        if (debugSidebar.classList.contains("sidebar-collapsed")) {
+            toggleSidebarBtn.innerHTML = "&#x2192;"; // Right Arrow
+            toggleSidebarBtn.title = "Open Panel";
+        } else {
+            toggleSidebarBtn.innerHTML = "&#x2190;"; // Left Arrow
+            toggleSidebarBtn.title = "Close Panel";
+        }
+    });
+
     // --- State Variables ---
     let selectedMealType = "";
     let currentUserProfile = ""; // Stores the profile from Agent 1
     let currentRecipeOptions = []; // Stores the 4 options from Agent 2
+
+    // --- UPDATED: Function to render a single agent log ---
+    function addAgentLog(log) {
+        // Create the <details> element
+        const details = document.createElement('details');
+        details.className = 'agent-log';
+        
+        // Create the <summary> element (the clickable title)
+        const summary = document.createElement('summary');
+        summary.className = 'agent-summary';
+        summary.textContent = log.agent;
+        details.appendChild(summary);
+
+        // Create a div to hold the content
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'agent-log-content';
+
+        if (log.input) {
+            const inputLabel = document.createElement('h5');
+            inputLabel.textContent = 'Input (Exact Prompt)';
+            contentDiv.appendChild(inputLabel);
+
+            const inputPre = document.createElement('pre');
+            inputPre.textContent = log.input;
+            contentDiv.appendChild(inputPre);
+        }
+
+        if (log.output) {
+            const outputLabel = document.createElement('h5');
+            outputLabel.textContent = 'Output (Raw Response)';
+            contentDiv.appendChild(outputLabel);
+
+            const outputPre = document.createElement('pre');
+            outputPre.textContent = log.output;
+            contentDiv.appendChild(outputPre);
+        }
+
+        // Add the content to the <details> element
+        details.appendChild(contentDiv);
+        
+        // Add the new log to the panel
+        debugPanelBody.appendChild(details);
+
+        // --- Auto-open the first log (User) and the most recent log ---
+        // Close all others
+        const allLogs = debugPanelBody.querySelectorAll('details.agent-log');
+        allLogs.forEach((log, index) => {
+            if (index === 0 || index === allLogs.length - 1) {
+                log.open = true;
+            } else {
+                log.open = false;
+            }
+        });
+
+        // Scroll to the bottom of the panel
+        debugPanelBody.scrollTop = debugPanelBody.scrollHeight;
+    }
 
     // --- Event Listener for Meal Buttons (Unchanged) ---
     mealButtonsContainer.addEventListener("click", (e) => {
@@ -51,6 +126,11 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault(); 
         errorLog.innerHTML = "";
         aiResponse.innerHTML = ""; 
+        
+        // --- Clear debug panel on new request ---
+        debugPanelBody.innerHTML = "";
+        addAgentLog({ agent: "User", input: `Meal: ${selectedMealType}, Details: "${userInput.value}"`, output: "Requesting recipes..." });
+
         logToSystem("New request initiated...");
 
         const userText = userInput.value;
@@ -80,6 +160,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error(data.error || `Server error: ${response.status}`);
             }
 
+            // --- Render agent logs ---
+            if (data.agent_logs) {
+                data.agent_logs.forEach(addAgentLog);
+            }
+
             logToSystem("Agent 1 & 2 success. Storing profile and building recipe cards...");
             currentUserProfile = data.user_profile; 
             currentRecipeOptions = data.recipe_options;
@@ -95,8 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const summary = `<p>${recipe.summary}</p>`;
                 const why = `<p><strong>Why it's perfect:</strong> ${recipe.why_perfect}</p>`;
                 
-                // --- THIS IS THE FIX for the 'map' error ---
-                // We check if main_ingredients exists and is an array before mapping it.
                 let ingredientsHTML = '';
                 if (recipe.main_ingredients && Array.isArray(recipe.main_ingredients)) {
                     ingredientsHTML = `
@@ -109,7 +192,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     logToSystem(`Recipe "${recipe.title}" has no main_ingredients.`, 'INFO');
                     ingredientsHTML = '<p><strong>Main Ingredients:</strong> Not specified.</p>';
                 }
-                // --- End of fix ---
                 
                 card.innerHTML = title + summary + why + ingredientsHTML;
 
@@ -123,6 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
             logToSystem(error.message, 'ERROR');
+            addAgentLog({ agent: "System Error", output: error.message });
             aiResponse.textContent = "Failed to get response.";
         } finally {
             submitButton.disabled = false;
@@ -135,6 +218,9 @@ document.addEventListener("DOMContentLoaded", () => {
     async function selectRecipe(recipe) {
         logToSystem(`User selected recipe: ${recipe.title}. Calling Agent 3...`);
         
+        // --- Log user action to debug panel ---
+        addAgentLog({ agent: "User Action", input: "Recipe Clicked", output: recipe.title });
+
         recipeTitle.textContent = recipe.title;
         heroImage.src = ""; 
         heroImage.style.display = "none"; 
@@ -160,6 +246,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error(data.error || `Server error: ${response.status}`);
             }
 
+            // --- Render agent logs ---
+            if (data.agent_logs) {
+                data.agent_logs.forEach(addAgentLog);
+            }
+
             logToSystem("Agent 3 success. Rendering full recipe and hero image.");
             
             heroImage.src = data.hero_image_url;
@@ -170,6 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
             logToSystem(error.message, 'ERROR');
+            addAgentLog({ agent: "System Error", output: error.message });
             recipeContent.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
         }
     }
@@ -177,6 +269,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- Back Button Event Listener ---
     backButton.addEventListener("click", () => {
         logToSystem("User returned to recipe options.");
+        // --- Log user action ---
+        addAgentLog({ agent: "User Action", output: "Clicked 'Back to Options'" });
         recipeView.style.display = "none";
         requestView.style.display = "block";
     });
@@ -184,6 +278,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- 'Let's Cook' Button ---
     cookButton.addEventListener("click", () => {
         logToSystem("User clicked 'Let's Cook!'");
+        // --- Log user action ---
+        addAgentLog({ agent: "User Action", output: "Clicked 'Let's Cook!'" });
         alert("Next step: Build the step-by-step cooking mode!");
     });
 
