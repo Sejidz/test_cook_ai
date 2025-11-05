@@ -26,202 +26,49 @@ document.addEventListener("DOMContentLoaded", () => {
     const debugSidebar = document.getElementById("debug-sidebar");
     const toggleSidebarBtn = document.getElementById("toggle-sidebar-btn");
 
-    // --- Get Cooking Mode & Modal Elements ---
+    // --- MODIFIED: Get Cooking Mode & Modal Elements ---
     const cookingModeView = document.getElementById("cooking-mode-view");
     const exitCookModeBtn = document.getElementById("exit-cook-mode-btn");
     const cookModeTitle = document.getElementById("cook-mode-title");
+    
+    // Step Display
     const stepDisplayArea = document.getElementById("step-display-area");
     const stepDisplayNumber = document.getElementById("step-display-number");
     const stepDisplayInstruction = document.getElementById("step-display-instruction");
+    
+    // Step Tools
     const coachExplainStepBtn = document.getElementById("coach-explain-step-btn");
     const coachAskChatbotBtn = document.getElementById("coach-ask-chatbot-btn");
+    
+    // Step Nav
     const prevStepBtn = document.getElementById("prev-step-btn");
     const nextStepBtn = document.getElementById("next-step-btn");
+
+    // Chatbot Modal
     const chatbotModalBackdrop = document.getElementById("chatbot-modal-backdrop");
     const chatbotModalCloseBtn = document.getElementById("chatbot-modal-close-btn");
     const chatForm = document.getElementById("chat-form");
     const chatInput = document.getElementById('chat-input');
     const chatHistoryEl = document.getElementById('chat-history');
+
+    // Explain Step Modal
     const modalBackdrop = document.getElementById("modal-backdrop");
     const modalCloseBtn = document.getElementById("modal-close-btn");
     const modalTitle = document.getElementById("modal-title");
     const modalBody = document.getElementById("modal-body");
-    
-    // --- NEW: Get Profile Data Tab Elements ---
-    const profileTabs = document.querySelector(".profile-tabs");
-    const profileIngredientsPanel = document.getElementById("profile-ingredients-panel");
-    const profileCalendarPanel = document.getElementById("profile-calendar-panel");
-    const profileRulesPanel = document.getElementById("profile-rules-panel");
 
     // --- State Variables ---
     let selectedMealType = "";
-    let currentUserProfile = ""; 
-    let currentRecipeOptions = []; 
-    let currentRecipeHTML = ""; 
-    let currentRecipeTitle = ""; 
-    let currentRecipeForChatbot = ""; 
-    let chatHistory = []; 
-    let allStepsArray = []; 
-    let currentStepIndex = 0; 
+    let currentUserProfile = ""; // Stores the profile from Agent 1
+    let currentRecipeOptions = []; // Stores the 4 options from Agent 2
+    let currentRecipeHTML = ""; // Stores the raw HTML from Agent 3/5
+    let currentRecipeTitle = ""; // Stores the current recipe title
+    let currentRecipeForChatbot = ""; // Stores the full text for the chatbot
+    let chatHistory = []; // Chatbot Memory
     
-    // --- NEW: State for profile data ---
-    let profileData = { ingredients: [], calendar: [], ruleset: [] };
-
-    
-    // --- ================================== --- */
-    // --- PAGE INITIALIZATION & DATA LOADING --- */
-    // --- ================================== --- */
-
-    // --- NEW: Function to load all CSV data on page start ---
-    async function loadProfileData() {
-        try {
-            const response = await fetch("/api/get-all-data");
-            if (!response.ok) {
-                throw new Error("Could not load profile data.");
-            }
-            profileData = await response.json();
-            
-            // Populate the new tabs
-            renderIngredientsTable(profileData.ingredients);
-            renderCalendarTable(profileData.calendar);
-            renderRulesetTable(profileData.ruleset);
-            
-            logToSystem("Profile data loaded successfully.", "SUCCESS");
-
-        } catch (error) {
-            logToSystem(error.message, "ERROR");
-            profileIngredientsPanel.innerHTML = `<p style="color: red;">${error.message}</p>`;
-            profileCalendarPanel.innerHTML = `<p style="color: red;">${error.message}</p>`;
-            profileRulesPanel.innerHTML = `<p style="color: red;">${error.message}</p>`;
-        }
-    }
-    
-    // --- NEW: Helper function to render Ingredients table ---
-    function renderIngredientsTable(ingredients) {
-        if (!ingredients || ingredients.length === 0) {
-            profileIngredientsPanel.innerHTML = "<p>No ingredient data found.</p>";
-            return;
-        }
-        
-        let tableHTML = `<table class="data-table"><thead><tr>
-            <th>Ingredient</th>
-            <th>Availability</th>
-            <th>Preference Score</th>
-            <th>Edit Score</th>
-            </tr></thead><tbody>`;
-            
-        ingredients.forEach(item => {
-            tableHTML += `<tr>
-                <td>${item.ingredient_name}</td>
-                <td>${item.availability}</td>
-                <td><span id="pref-score-${item.ingredient_id}">${parseFloat(item.preference_score).toFixed(2)}</span></td>
-                <td class="preference-controls">
-                    <button data-id="${item.ingredient_id}" class="pref-btn-decr">-</button>
-                    <button data-id="${item.ingredient_id}" class="pref-btn-incr">+</button>
-                </td>
-            </tr>`;
-        });
-        
-        tableHTML += `</tbody></table>`;
-        profileIngredientsPanel.innerHTML = tableHTML;
-    }
-    
-    // --- NEW: Helper function to render Calendar table ---
-    function renderCalendarTable(calendar) {
-        if (!calendar || calendar.length === 0) {
-            profileCalendarPanel.innerHTML = "<p>No calendar data found.</p>";
-            return;
-        }
-        // Just show the first 2 columns for brevity
-        let tableHTML = `<table class="data-table"><thead><tr>
-            <th>Date</th>
-            <th>Day</th>
-            <th>Time Available (min)</th>
-            <th>Activity</th>
-            </tr></thead><tbody>`;
-            
-        calendar.forEach(item => {
-            tableHTML += `<tr>
-                <td>${item.date}</td>
-                <td>${item.day}</td>
-                <td>${item.time_available_min}</td>
-                <td>${item.special_events}</td>
-            </tr>`;
-        });
-        tableHTML += `</tbody></table>`;
-        profileCalendarPanel.innerHTML = tableHTML;
-    }
-    
-    // --- NEW: Helper function to render Ruleset table ---
-    function renderRulesetTable(ruleset) {
-        if (!ruleset || ruleset.length === 0) {
-            profileRulesPanel.innerHTML = "<p>No ruleset data found.</p>";
-            return;
-        }
-        let tableHTML = `<table class="data-table"><thead><tr>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Enforcement</th>
-            </tr></thead><tbody>`;
-            
-        ruleset.forEach(item => {
-            tableHTML += `<tr>
-                <td>${item.category}</td>
-                <td>${item.description}</td>
-                <td>${item.enforcement}</td>
-            </tr>`;
-        });
-        tableHTML += `</tbody></table>`;
-        profileRulesPanel.innerHTML = tableHTML;
-    }
-    
-    // --- NEW: Event Listener for Profile Tabs ---
-    profileTabs.addEventListener('click', (e) => {
-        if (!e.target.classList.contains('profile-tab-btn')) return;
-
-        const targetTab = e.target.dataset.tab;
-
-        // Update button active state
-        document.querySelectorAll('.profile-tab-btn').forEach(btn => btn.classList.remove('active'));
-        e.target.classList.add('active');
-
-        // Update panel active state
-        document.querySelectorAll('.profile-tab-panel').forEach(panel => {
-            if (panel.id === `${targetTab}-panel`) {
-                panel.classList.add('active');
-            } else {
-                panel.classList.remove('active');
-            }
-        });
-    });
-
-    // --- NEW: Event Listener for Preference Buttons ---
-    profileIngredientsPanel.addEventListener('click', (e) => {
-        if (!e.target.classList.contains('pref-btn-incr') && !e.target.classList.contains('pref-btn-decr')) {
-            return;
-        }
-        
-        const id = e.target.dataset.id;
-        const scoreSpan = document.getElementById(`pref-score-${id}`);
-        let currentScore = parseFloat(scoreSpan.textContent);
-        
-        if (e.target.classList.contains('pref-btn-incr')) {
-            currentScore = Math.min(1.0, currentScore + 0.1); // Max 1.0
-        } else {
-            currentScore = Math.max(0.0, currentScore - 0.1); // Min 0.0
-        }
-        
-        scoreSpan.textContent = currentScore.toFixed(2);
-        
-        // --- TODO: We would now send this updated score to the server to save it
-        // For now, it just updates visually
-        logToSystem(`Updated preference for ${id} to ${currentScore.toFixed(2)} (visual only).`);
-    });
-
-    
-    // --- ================================== --- */
-    // --- AGENT & APP LOGIC (Unchanged)    --- */
-    // --- ================================== --- */
+    // --- NEW: Cooking Mode State ---
+    let allStepsArray = []; // Will store { step: "1", instruction: "..." }
+    let currentStepIndex = 0; // The 0-based index of the allStepsArray
 
     // --- Event Listener for Toggle Button (Unchanged) ---
     toggleSidebarBtn.addEventListener("click", () => {
@@ -237,7 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Function to render a single agent log (Unchanged) ---
     function addAgentLog(log) {
-        // ... (function is unchanged) ...
         const details = document.createElement('details');
         details.className = 'agent-log';
         const summary = document.createElement('summary');
@@ -277,7 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Event Listener for Meal Buttons (Unchanged) ---
     mealButtonsContainer.addEventListener("click", (e) => {
-        // ... (function is unchanged) ...
         if (e.target.classList.contains("meal-btn")) {
             const clickedButton = e.target;
             mealButtons.forEach(btn => btn.classList.remove("active"));
@@ -301,7 +146,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Form Submit Event Listener (Agent 1 & 2) (Unchanged) ---
     promptForm.addEventListener("submit", async (e) => {
-        // ... (function is unchanged) ...
         e.preventDefault(); 
         errorLog.innerHTML = "";
         aiResponse.innerHTML = ""; 
@@ -388,20 +232,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- selectRecipe Function (Unchanged) ---
     async function selectRecipe(recipe) {
-        // ... (function is unchanged) ...
         logToSystem(`User selected recipe: ${recipe.title}. Calling Agent 3...`);
         addAgentLog({ agent: "User Action", input: "Recipe Clicked", output: recipe.title });
+
         recipeTitle.textContent = recipe.title;
         heroImage.src = ""; 
         heroImage.style.display = "none";
+        
         ingredientsPanel.innerHTML = "<p>Loading...</p>";
         instructionsPanel.innerHTML = "<p>Loading...</p>";
         nutritionPanel.innerHTML = "<p>Loading...</p>";
+        
         cookButton.style.display = "none";
+
         requestView.style.display = "none";
         recipeView.style.display = "block";
         window.scrollTo(0, 0); 
+        
         setupTabs();
+
         try {
             const response = await fetch("/api/get-recipe-details", {
                 method: "POST",
@@ -464,12 +313,13 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // --- setupTabs Function (Unchanged) ---
     function setupTabs() {
-        // ... (function is unchanged) ...
         recipeTabs.addEventListener('click', (e) => {
             if (!e.target.classList.contains('tab-btn')) return;
+
             const targetTab = e.target.dataset.tab;
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
+
             document.querySelectorAll('.tab-panel').forEach(panel => {
                 if (panel.id === `${targetTab}-panel`) {
                     panel.classList.add('active');
@@ -483,7 +333,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Back Button Event Listener (Unchanged) ---
     backButton.addEventListener("click", () => {
-        // ... (function is unchanged) ...
         logToSystem("User returned to recipe options.");
         addAgentLog({ agent: "User Action", output: "Clicked 'Back to Options'" });
         recipeView.style.display = "none";
@@ -491,32 +340,50 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     
-    // --- Cooking Mode Logic (All Unchanged) ---
+    // --- ================================== --- */
+    // --- NEW: COOKING MODE LOGIC --- */
+    // --- ================================== --- */
+    
+    // --- 'Let's Cook' Button (MODIFIED) ---
     cookButton.addEventListener("click", () => {
         logToSystem("User clicked 'Let's Cook!'");
         addAgentLog({ agent: "User Action", output: "Clicked 'Let's Cook!'" });
+        
+        // 1. Parse steps from the instructions panel
         const instructionsTable = instructionsPanel.querySelector('table');
         if (!buildCookingSteps(instructionsTable)) {
+            // Abort if parsing failed
             alert("Error: Could not parse cooking steps.");
             return;
         }
+
+        // 2. Switch Views
         recipeView.style.display = "none";
         cookingModeView.style.display = "block";
         cookModeTitle.textContent = `Cooking: ${currentRecipeTitle}`;
+        
+        // 3. Reset chat history
         chatHistory = [];
         chatHistoryEl.innerHTML = `
             <div class="chat-message bot">
                 Hi! I'm your cooking assistant. I know the recipe and your current step. Ask me anything!
             </div>`;
+        
+        // 4. Display the first step
         currentStepIndex = 0;
         displayCurrentStep();
     });
 
+    // --- buildCookingSteps Function (REWRITTEN) ---
+    // Parses steps and stores them in allStepsArray
     function buildCookingSteps(instructionsTable) {
-        allStepsArray = []; 
+        allStepsArray = []; // Clear old steps
+        
+        // Get the full recipe text for the chatbot
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = currentRecipeHTML;
         currentRecipeForChatbot = tempDiv.textContent || tempDiv.innerText;
+
         if (instructionsTable) {
             const rows = instructionsTable.querySelectorAll('tbody tr');
             rows.forEach((row, index) => {
@@ -536,16 +403,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
+    // --- NEW: Function to show the current step in the UI ---
     function displayCurrentStep() {
         if (allStepsArray.length === 0) return;
+
+        // Get the current step object
         const stepData = allStepsArray[currentStepIndex];
+        
+        // Update UI
         stepDisplayNumber.textContent = `Step ${stepData.step}`;
         stepDisplayInstruction.textContent = stepData.instruction;
+        
+        // Update button states
         prevStepBtn.disabled = (currentStepIndex === 0);
         nextStepBtn.disabled = (currentStepIndex === allStepsArray.length - 1);
+        
+        // Update global state for chatbot
         currentActiveStep = stepData.step;
     }
 
+    // --- NEW: Event Listeners for Nav Buttons ---
     prevStepBtn.addEventListener('click', () => {
         if (currentStepIndex > 0) {
             currentStepIndex--;
@@ -562,12 +439,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // --- NEW: Exit Cooking Mode Button ---
     exitCookModeBtn.addEventListener('click', () => {
         cookingModeView.style.display = "none";
         recipeView.style.display = "block";
         addAgentLog({ agent: "User Action", output: "Clicked 'Exit Cooking Mode'" });
     });
 
+    // --- UPDATED: showStepExplanation (Agent 6) ---
+    // This is now triggered by the "More Details" button
     coachExplainStepBtn.addEventListener('click', () => {
         const stepData = allStepsArray[currentStepIndex];
         showStepExplanation(stepData.step, stepData.instruction);
@@ -576,9 +456,11 @@ document.addEventListener("DOMContentLoaded", () => {
     async function showStepExplanation(stepNumber, instructionText) {
         logToSystem(`User clicked Step ${stepNumber}: ${instructionText}`);
         addAgentLog({ agent: "User Action", input: `Clicked 'More Details' for Step ${stepNumber}`, output: instructionText });
+
         modalTitle.textContent = `Explanation for Step ${stepNumber}`;
         modalBody.innerHTML = "<p>Loading explanation from Agent 6 (Coach)...</p>";
         modalBackdrop.style.display = "flex";
+        
         try {
             const response = await fetch("/api/explain-step", {
                 method: "POST",
@@ -599,6 +481,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
+    // --- Modal Close Buttons (Explain Step) ---
     modalCloseBtn.addEventListener('click', () => {
         modalBackdrop.style.display = "none";
     });
@@ -608,8 +491,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // --- UPDATED: Chatbot (Agent 7) ---
+    // Triggered by "Ask Chatbot" button
     coachAskChatbotBtn.addEventListener('click', () => {
         chatbotModalBackdrop.style.display = "flex";
+        // Reset chat history with a new greeting
         chatHistory = [];
         chatHistoryEl.innerHTML = `
             <div class="chat-message bot">
@@ -617,17 +503,21 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>`;
     });
     
+    // Close button for chatbot modal
     chatbotModalCloseBtn.addEventListener('click', () => {
         chatbotModalBackdrop.style.display = "none";
     });
 
+    // Chatbot form submission
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const question = chatInput.value.trim();
         if (!question) return;
+
         addChatMessage(question, 'user');
         chatHistory.push({ "role": "user", "content": question });
         chatInput.value = "";
+        
         try {
             const response = await fetch("/api/ask-chatbot", {
                 method: "POST",
@@ -638,18 +528,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     chat_history: chatHistory
                 })
             });
+            
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.error || "Unknown error from Agent 7");
             }
+
             addChatMessage(data.answer, 'bot');
             chatHistory.push({ "role": "model", "content": data.answer });
+
         } catch (error) {
             logToSystem(error.message, 'ERROR');
             addChatMessage(`Sorry, I ran into an error: ${error.message}`, 'bot');
         }
     });
     
+    // Helper to add a message to the chat UI
     function addChatMessage(message, sender) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `chat-message ${sender}`;
@@ -658,7 +552,6 @@ document.addEventListener("DOMContentLoaded", () => {
         chatHistoryEl.scrollTop = chatHistoryEl.scrollHeight;
     }
 
-
     // --- Utility Functions (unchanged) ---
     function logToSystem(message, type = 'INFO') {
         const timestamp = new Date().toLocaleTimeString();
@@ -666,6 +559,7 @@ document.addEventListener("DOMContentLoaded", () => {
         logEntry.classList.add('log-entry');
         let prefix = 'INFO';
         let color = '#0056b3'; 
+
         if (type === 'ERROR') {
             prefix = 'ERROR';
             color = '#d9534f';
@@ -677,12 +571,11 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             console.log(message);
         }
+
         logEntry.style.color = color;
         logEntry.textContent = `[${timestamp}] ${prefix}: ${message}`;
         errorLog.prepend(logEntry);
     }
 
-    // --- FINAL STEP: Load all data on start ---
     logToSystem("Page loaded and script initialized.");
-    loadProfileData(); // This triggers the new data load
 });

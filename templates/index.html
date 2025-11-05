@@ -20,27 +20,6 @@
 
     <main>
         <h1>AI Recipe Assistant</h1>
-
-        <div id="profile-data-section">
-            <h2>My Profile</h2>
-            <div class="profile-tabs">
-                <button class="profile-tab-btn active" data-tab="profile-ingredients">Ingredients</button>
-                <button class="profile-tab-btn" data-tab="profile-calendar">Calendar</button>
-                <button class="profile-tab-btn" data-tab="profile-rules">Ruleset</button>
-            </div>
-
-            <div class="profile-tab-content">
-                <div id="profile-ingredients-panel" class="profile-tab-panel active">
-                    <p>Loading ingredient data...</p>
-                </div>
-                <div id="profile-calendar-panel" class="profile-tab-panel">
-                    <p>Loading calendar data...</p>
-                </div>
-                <div id="profile-rules-panel" class="profile-tab-panel">
-                    <p>Loading ruleset data...</p>
-                </div>
-            </div>
-        </div>
         
         <div id="request-view">
             <form id="prompt-form">
@@ -96,13 +75,47 @@
         </div>
 
         <div id="cooking-mode-view" style="display: none;">
+            <button id="exit-cook-mode-btn">&larr; Exit Cooking Mode</button>
+            <h2 id="cook-mode-title">Cooking: [Recipe Title]</h2>
+
+            <div id="step-display-area">
+                <h3 id="step-display-number">Step 1</h3>
+                <p id="step-display-instruction">Instruction text goes here...</p>
             </div>
+            
+            <div class="cook-mode-tools">
+                <button id="coach-explain-step-btn">More Details (AI Coach)</button>
+                <button id="coach-ask-chatbot-btn">Ask Chatbot (AI Assistant)</button>
+            </div>
+            
+            <div class="cook-mode-nav">
+                <button id="prev-step-btn" disabled>&larr; Previous Step</button>
+                <button id="next-step-btn">Next Step &rarr;</button>
+            </div>
+        </div>
 
         <div id="modal-backdrop" style="display: none;">
+            <div id="modal-content">
+                <h3 id="modal-title">Step Explanation</h3>
+                <div id="modal-body">
+                    <p>Loading explanation...</p>
+                </div>
+                <button id="modal-close-btn">Close</button>
             </div>
+        </div>
         
         <div id="chatbot-modal-backdrop" style="display: none;">
+            <div id="chatbot-modal-content">
+                <h3>Cooking Assistant</h3>
+                <div id="chat-history">
+                    </div>
+                <form id="chat-form">
+                    <input type="text" id="chat-input" placeholder="Ask a question..." autocomplete="off">
+                    <button type="submit">Send</button>
+                </form>
+                <button id="chatbot-modal-close-btn">Close</button>
             </div>
+        </div>
 
     </main>
 

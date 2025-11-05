@@ -1,6 +1,6 @@
 import os
 import json
-import re # <-- NEW: Import Regular Expressions
+import csv  # <-- NEW: Import CSV module
 import google.generativeai as genai
 import markdown2
 from flask import Flask, request, jsonify, render_template
@@ -29,112 +29,27 @@ agent_6_model = genai.GenerativeModel('gemini-2.5-flash') # Technique Coach
 agent_7_model = genai.GenerativeModel('gemini-2.5-flash') # Chatbot
 
 
-# --- ================================== --- */
-# --- NEW: HELPER FUNCTIONS (MODIFIED) --- */
-# --- ================================== --- */
-
-def clean_file_content(file_content):
+# --- Helper function (MODIFIED) ---
+def read_file_content(filename):
     """
-    Removes tags and extra newlines from raw text.
-    """
-    # Remove tags
-    cleaned_text = re.sub(r'\\s*', '', file_content)
-    # Remove lines that are just '|' or empty
-    cleaned_lines = [line for line in cleaned_text.splitlines() if line.strip() and line.strip() != '|']
-    return "\n".join(cleaned_lines)
-
-def read_markdown_table_as_json(filename):
-    """
-    Custom parser to read the user's pipe-delimited Markdown tables
-    (even with [source] tags) and return a list of dictionaries (JSON).
+    Safely reads the content of a file.
+    If it's a CSV, it returns it as a list of dictionaries.
+    Otherwise, returns as plain text.
     """
     if not os.path.exists(filename):
-        return []
+        return [] if filename.endswith('.csv') else ""
         
     try:
-        raw_content = ""
         with open(filename, mode='r', encoding='utf-8') as f:
-            raw_content = f.read()
-        
-        # Clean the content first
-        cleaned_content = clean_file_content(raw_content)
-        lines = cleaned_content.splitlines()
-        
-        if len(lines) < 2: # Need at least header and one data line (separator is optional for parser)
-             return []
-
-        header_line = ""
-        separator_line_index = -1
-        
-        # Find the header line and the separator line
-        for i, line in enumerate(lines):
-            if '|' in line and '---' in line:
-                separator_line_index = i
-                header_line = lines[i-1] # Header is the line *before* the separator
-                break
-        
-        # If no separator was found, assume line 0 is header
-        if separator_line_index == -1:
-            header_line = lines[0]
-            separator_line_index = 0 # Read data from next line
-
-        # Clean and split the header line
-        header_line = header_line.strip()
-        if header_line.startswith('|'): header_line = header_line[1:]
-        if header_line.endswith('|'): header_line = header_line[:-1]
-        headers = [h.strip() for h in header_line.split('|')]
-        
-        data_rows = []
-        # Loop from the line *after* the separator
-        for line in lines[separator_line_index + 1:]:
-            line = line.strip()
-            if not line or '---' in line: # Skip empty lines or extra separators
-                continue
-            
-            # Clean and split the data line
-            if line.startswith('|'): line = line[1:]
-            if line.endswith('|'): line = line[:-1]
-            values = [v.strip() for v in line.split('|')]
-            
-            # Handle rows that might be broken by newlines
-            if len(values) < len(headers):
-                # This is a partial row. Assume it belongs to the previous row.
-                # This is a simple merge, might need refinement
-                if data_rows:
-                    last_row_values = list(data_rows[-1].values())
-                    # Find where the data broke and append
-                    # This is complex, for now, we'll just skip broken lines
-                    print(f"Skipping broken line: {line}")
-                continue
-            
-            if len(values) == len(headers):
-                data_rows.append(dict(zip(headers, values)))
-                
-        return data_rows
-
+            if filename.endswith('.csv'):
+                # Use DictReader to read CSV into a list of dictionaries
+                reader = csv.DictReader(f)
+                return [row for row in reader]
+            else:
+                return f.read()
     except Exception as e:
         print(f"Error reading file {filename}: {e}")
-        return []
-
-def read_file_as_raw_text(filename):
-    """
-    Reads the entire content of a file as a single string,
-    but cleans it first so the AI doesn't see [source] tags.
-    """
-    if not os.path.exists(filename):
-        return ""
-    try:
-        raw_content = ""
-        with open(filename, 'r', encoding='utf-8') as f:
-            raw_content = f.read()
-        return clean_file_content(raw_content)
-    except Exception as e:
-        return f"[Error reading file: {e}]"
-
-
-# --- ================================== --- */
-# --- FLASK ROUTES START HERE          --- */
-# --- ================================== --- */
+        return [] if filename.endswith('.csv') else f"[Error reading file: {e}]"
 
 # --- Frontend Route (Unchanged) ---
 @app.route('/')
@@ -142,14 +57,13 @@ def index():
     return render_template('index.html')
 
 
-# --- API Route to load all CSV data (MODIFIED) ---
+# --- NEW: API Route to load all CSV data for the frontend ---
 @app.route('/api/get-all-data', methods=['GET'])
 def get_all_data():
     try:
-        # Use our new Markdown table parser
-        ingredients_data = read_markdown_table_as_json('ingredients.csv')
-        calendar_data = read_markdown_table_as_json('calendar.csv')
-        ruleset_data = read_markdown_table_as_json('ruleset.csv')
+        ingredients_data = read_file_content('ingredients.csv')
+        calendar_data = read_file_content('calendar.csv')
+        ruleset_data = read_file_content('ruleset.csv')
         
         return jsonify({
             "ingredients": ingredients_data,
@@ -173,11 +87,19 @@ def call_gemini():
         if not meal_type:
             return jsonify({"error": "mealType is required"}), 400
 
-        # --- Read Data Files (MODIFIED) ---
-        # We send the RAW, CLEANED text to the AI
-        ingredients_data = read_file_as_raw_text('ingredients.csv')
-        calendar_data = read_file_as_raw_text('calendar.csv')
-        ruleset_data = read_file_as_raw_text('ruleset.csv')
+        # --- Read Data Files (now using the same CSV helper) ---
+        # We read the raw file content as text for the AI
+        ingredients_data = ""
+        with open('ingredients.csv', 'r', encoding='utf-8') as f:
+            ingredients_data = f.read()
+            
+        calendar_data = ""
+        with open('calendar.csv', 'r', encoding='utf-8') as f:
+            calendar_data = f.read()
+            
+        ruleset_data = ""
+        with open('ruleset.csv', 'r', encoding='utf-8') as f:
+            ruleset_data = f.read()
 
         # --- AGENT 1 (STRATEGIST) EXECUTION ---
         print("--- Calling Agent 1 (Strategist) ---")
@@ -245,7 +167,9 @@ def get_recipe_details():
         print(f"--- Calling Agent 3 for dish: {selected_dish_name} ---")
         
         # Read raw ingredient text for the AI
-        ingredients_data = read_file_as_raw_text('ingredients.csv')
+        ingredients_data = ""
+        with open('ingredients.csv', 'r', encoding='utf-8') as f:
+            ingredients_data = f.read()
         
         # --- AGENT 3 (FULL RECIPE) EXECUTION ---
         agent_3_prompt = prompts.AGENT_3_PROMPT_TEMPLATE.replace("{{USER_PROFILE_BRIEFING}}", user_profile)
@@ -340,7 +264,7 @@ def ask_chatbot():
         data = request.get_json()
         recipe_context = data.get('recipe_context')
         current_step = data.get('current_step')
-        chat_history = data.get('chat_history') 
+        chat_history = data.get('chat_history') # This is our new memory array
 
         if not recipe_context or not current_step or not chat_history:
             return jsonify({"error": "Missing recipe, step, or chat history"}), 400

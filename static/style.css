@@ -203,96 +203,6 @@ button[type="submit"]:disabled {
     cursor: not-allowed;
 }
 
-/* --- ================================== --- */
-/* --- NEW: PROFILE DATA SECTION STYLES --- */
-/* --- ================================== --- */
-
-#profile-data-section {
-    background-color: #fdfdfd;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 0 20px 20px 20px;
-    margin-bottom: 30px;
-}
-
-#profile-data-section h2 {
-    border: none;
-    padding: 0;
-    margin-top: 20px;
-}
-
-.profile-tabs {
-    display: flex;
-    border-bottom: 2px solid #ddd;
-    margin-bottom: 20px;
-}
-
-.profile-tab-btn {
-    padding: 10px 15px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #6c757d;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-}
-.profile-tab-btn:hover {
-    background-color: #f8f8f8;
-}
-.profile-tab-btn.active {
-    color: #007bff;
-    border-bottom-color: #007bff;
-}
-
-.profile-tab-panel {
-    display: none;
-}
-.profile-tab-panel.active {
-    display: block;
-}
-
-/* Style for the tables we're about to add */
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.data-table th,
-.data-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-    font-size: 0.9rem;
-}
-.data-table th {
-    background-color: #f4f7f6;
-    font-weight: bold;
-}
-/* For the preference buttons */
-.preference-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.preference-controls button {
-    font-weight: bold;
-    border: 1px solid #ccc;
-    background: #f9f9f9;
-    cursor: pointer;
-    border-radius: 4px;
-    width: 25px;
-    height: 25px;
-}
-.preference-controls button:hover {
-    background: #eee;
-}
-.preference-controls span {
-    font-weight: bold;
-    width: 30px;
-    text-align: center;
-}
-
 .results-container {
     margin-top: 30px;
 }
@@ -465,6 +375,9 @@ button[type="submit"]:disabled {
     background-color: #eee;
     margin-bottom: 20px;
 }
+
+/* --- DEPRECATED: Old recipe-content style --- */
+/* #recipe-content { ... } */
 
 /* --- Tables (now in tabs) --- */
 .tab-panel table { 
